@@ -2,7 +2,6 @@ import { Disclosure } from "@headlessui/react";
 
 import { ChevronUpIcon } from "@heroicons/react/20/solid";
 import { apply, tw } from "@twind/core";
-import { useState } from "react";
 
 type DisclosureContent = {
   title: string;

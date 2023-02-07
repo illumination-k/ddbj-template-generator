@@ -32,6 +32,29 @@ const PreviewTableCellInner = ({ val, field }: PreviewTableCellInnerProps) => {
     );
   }
 
+  if (field.type === "nestedarray") {
+    return (
+      <tr>
+        <Td>{field.label}</Td>
+        <Td>
+          {val
+            ? val.map((v: { [key: string]: string | number | undefined }, i: number) => {
+              const displayValue = field.schemas.map((schema) => {
+                if (val) {
+                  return `${schema.label}: ${v[schema.name]}`;
+                } else {
+                  return `${schema.label}: ${schema.defaultValue}`;
+                }
+              }).join("; ");
+
+              return <p key={i}>{displayValue}</p>;
+            })
+            : ""}
+        </Td>
+      </tr>
+    );
+  }
+
   return (
     <tr>
       <Td>{field.label}</Td>

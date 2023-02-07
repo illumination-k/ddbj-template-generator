@@ -1,7 +1,6 @@
-import { Popover, Transition } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { apply, tw } from "@twind/core";
-import { Fragment } from "react";
 
 export type HelpPopoverProps = {
   className?: string;

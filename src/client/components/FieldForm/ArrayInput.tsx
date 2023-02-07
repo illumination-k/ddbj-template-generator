@@ -1,6 +1,5 @@
 import { ArrayInputField } from "@/client/types/field";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import Input from "./Input";
 import LabelWithHelp from "./LabelWithHelp";

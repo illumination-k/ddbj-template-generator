@@ -1,7 +1,6 @@
 import { apply, tw } from "@twind/core";
 import React from "react";
 
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import HelpPopover from "./HelpPopover";
 
 export type LabelWithHelpProps = {

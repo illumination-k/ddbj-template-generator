@@ -10,14 +10,21 @@ import PreviewTable from "@/client/components/PreviewTable";
 
 import createCtx from "@/client/libs/createCtx";
 import { attachReplicateToSamplename, attachReplicateToSampleTitle } from "@/client/libs/replicates";
+import { attachAstarisks } from "@/client/libs/tsvHeader";
 import { Field } from "@/client/types/field";
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import FieldForm from "../FieldForm";
 
-type BiosampleValue = string | number | { value: string }[] | undefined;
+type BiosampleValueScalar = string | number | undefined;
+
+type BiosampleValue =
+  | BiosampleValueScalar
+  | { value: string }[]
+  | { [key: string]: BiosampleValueScalar }[];
+
 export type BiosampleData = { [key: string]: BiosampleValue };
 
-function biosampleValueToString(val: BiosampleValue) {
+function biosampleValueScalerToString(val: BiosampleValueScalar): string {
   if (!val) {
     return "";
   } else if (typeof val === "string") {
@@ -29,18 +36,49 @@ function biosampleValueToString(val: BiosampleValue) {
 
     return val.toString();
   } else {
-    return val.filter((v) => v.value !== "").map((v) => v.value).join(",");
+    throw "Unreacheable";
   }
 }
 
-function generateTemplateTsv(
+function biosampleValueToString(val: BiosampleValue): string {
+  if (!val) {
+    return "";
+  } else if (typeof val === "string") {
+    return val;
+  } else if (typeof val === "number") {
+    if (isNaN(val)) {
+      return "";
+    }
+
+    return val.toString();
+  } else {
+    if (val.length === 0) {
+      return "";
+    }
+
+    if (Object.keys(val[0]).length === 1 && Object.keys(val[0]).includes("value")) {
+      return val.filter((v) => v.value !== "").map((v) => v.value).join(",");
+    } else {
+      return val.map((v) =>
+        Object.entries(v).map(([key, value]) => {
+          return `${key}:${biosampleValueScalerToString(value)}`;
+        })
+      ).join(";");
+    }
+  }
+}
+
+function generateDDBJTemplateTsv(
   data: BiosampleData[],
   fields: Field[],
-  fixedData: { organism: string; bioproject_id: string; taxonomy_id: string },
+  fixedData: { [key: string]: string },
+  sep = "\t",
 ) {
-  const sep = ",";
-
-  const header: string[] = Object.keys(fixedData).concat(fields.map((f) => f.name));
+  // headerの最初がsample_nameである必要がある
+  const header: string[] = (fields.map((f) => attachAstarisks(f.name))).concat(Object.keys(fixedData));
+  // 最終行にreplicateの情報を加える
+  // https://www.ddbj.nig.ac.jp/biosample/validation.html#BS_R0024
+  header.push("replicate");
 
   const fixedBodyData = Object.values(fixedData);
 
@@ -48,9 +86,9 @@ function generateTemplateTsv(
 
   data.forEach((d) => {
     // Number of duplicatesの数だけエレメントを作成
-    const number_of_biological_duplicates = d["number_of_biological_duplicates"] as number;
+    const replicates_number = d["replicates_number"] as number;
 
-    for (let i = 0; i < number_of_biological_duplicates; i++) {
+    for (let i = 0; i < replicates_number; i++) {
       let elems: string[] = [];
       fields.forEach((f) => {
         const val = biosampleValueToString(d[f.name]);
@@ -67,7 +105,11 @@ function generateTemplateTsv(
         elems.push(val);
       });
 
-      body.push(fixedBodyData.concat(elems));
+      body.push(
+        elems
+          .concat(fixedBodyData)
+          .concat([`biological replicate ${i + 1}`]),
+      );
     }
   });
 
@@ -107,10 +149,12 @@ function useBiosampleFormContext() {
 
   let defaultValues: BiosampleData = {};
   fields.forEach((f) => {
+    if (f.type === "nestedarray") {
+      return;
+    }
+
     defaultValues[f.name] = f.defaultValue;
   });
-
-  console.log("CreatedDefaultValues:", defaultValues);
 
   return {
     fields,
@@ -178,8 +222,10 @@ const BiosampleForm = ({}) => {
                       key={i}
                     >
                       <p className="pr-3 font-bold text-xl">
-                        {`${d.sample_title as string} (${d.number_of_biological_duplicates as number})`}
+                        {`${d["sample_title"] as string} (${d["replicates_number"] as number})`}
                       </p>
+
+                      {/* Edit button */}
                       <button
                         onClick={() => {
                           method.reset(d);
@@ -189,6 +235,7 @@ const BiosampleForm = ({}) => {
                         <PencilSquareIcon className="h-6 w-6" />
                       </button>
 
+                      {/* delete button */}
                       <button
                         onClick={() => {
                           method.reset(defaultValues);
@@ -208,13 +255,15 @@ const BiosampleForm = ({}) => {
               <div className="flex">
                 <Button
                   onClick={() => {
-                    const lines = generateTemplateTsv(
+                    const lines = generateDDBJTemplateTsv(
                       data,
                       fields,
                       {
                         bioproject_id,
                         organism,
+                        sub_species: "ruderalis",
                         taxonomy_id,
+                        geo_loc_name: "not applicable",
                       },
                     );
 

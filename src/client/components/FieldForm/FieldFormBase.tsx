@@ -8,7 +8,8 @@ import LabelWithHelp from "./LabelWithHelp";
 
 import { UnconditionalField } from "@/client/types/field";
 import ArrayInput from "./ArrayInput";
-import Textarea from "./Textarea";
+import NestedArrayInput from "./NestedArrayInput";
+import TextForm from "./TextForm";
 
 type FieldFormProps = {
   field: UnconditionalField;
@@ -32,12 +33,7 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
     }
 
     case "text": {
-      const { name, label, help, required, example } = field;
-      return (
-        <LabelWithHelp label={label} help={help} required={required}>
-          <Textarea className="h-24" {...register(name, { required })} />
-        </LabelWithHelp>
-      );
+      return <TextForm field={field} />;
     }
 
     case "select": {
@@ -57,6 +53,10 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
       return <ArrayInput field={field} />;
     }
 
+    case "nestedarray": {
+      return <NestedArrayInput field={field} />;
+    }
+
     case "radio": {
       const { label, name, help, required, options } = field;
       if (!options || options.length === 0) {
@@ -67,7 +67,7 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
         <LabelWithHelp label={label} help={help} required={required}>
           <div className="flex gap-3">
             {options.map((option, i) => (
-              <div key={i}>
+              <div key={i} className="flex items-center gap-1">
                 <input type="radio" value={option} {...register(name, { required })} />
                 <label>{option}</label>
               </div>
