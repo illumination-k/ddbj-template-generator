@@ -1,6 +1,14 @@
-import React from "react";
+type DependDef = {
+  depend: string;
+  dependValue: string;
+  dependType: "eq" | "nq";
+};
 
-interface FieldType {}
+type FieldTransform = {
+  template: string;
+  replace_names: string[];
+  depend_def: DependDef;
+};
 
 type FieldBase = {
   label: string;
@@ -8,6 +16,7 @@ type FieldBase = {
   help?: string;
   comment?: string;
   required: boolean;
+  transforms?: FieldTransform[];
 };
 
 export type InputField =
@@ -26,9 +35,19 @@ type NestedArraySchemaBase = {
 };
 
 type NestedArraySchemaInput =
-  & { type: "input"; isNumber?: boolean; pattern?: RegExp; defaultValue: number | string }
+  & {
+    type: "input";
+    isNumber?: boolean;
+    pattern?: RegExp;
+    defaultValue: number | string;
+  }
   & NestedArraySchemaBase;
-type NestedArraySchemaSelect = { type: "select"; options: string[]; defaultValue?: string } & NestedArraySchemaBase;
+
+type NestedArraySchemaSelect = {
+  type: "select";
+  options: string[];
+  defaultValue?: string;
+} & NestedArraySchemaBase;
 
 export type NestedArraySchema = NestedArraySchemaInput | NestedArraySchemaSelect;
 
@@ -41,6 +60,9 @@ export type UnconditionalField =
   | RadioboxField
   | ArrayInputField
   | NestedArrayInputField;
-export type ConditionalField = UnconditionalField & { depend: string; dependValue: string; dependType: "eq" | "nq" };
+
+export type ConditionalField =
+  & UnconditionalField
+  & DependDef;
 
 export type Field = UnconditionalField | ConditionalField;

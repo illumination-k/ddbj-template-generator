@@ -9,6 +9,7 @@ import { Chip } from "@/client/components/Chip";
 import PreviewTable from "@/client/components/PreviewTable";
 
 import createCtx from "@/client/libs/createCtx";
+import isDepend from "@/client/libs/isDepend";
 import { attachReplicateToSamplename, attachReplicateToSampleTitle } from "@/client/libs/replicates";
 import { attachAstarisks } from "@/client/libs/tsvHeader";
 import { Field } from "@/client/types/field";
@@ -38,6 +39,36 @@ function biosampleValueScalerToString(val: BiosampleValueScalar): string {
   } else {
     throw "Unreacheable";
   }
+}
+
+function recursiveTransform(data: BiosampleData, curField: Field, allFields: Field[]): string {
+  const self = biosampleValueToString(data[curField.name]);
+  if (!curField.transforms) {
+    return self;
+  }
+
+  return curField.transforms.reduce((p, t) => {
+    const { depend, dependValue, dependType } = t.depend_def;
+    if (!isDepend(data[depend], dependValue, dependType)) {
+      return p;
+    }
+
+    return t.replace_names.reduce((p, name) => {
+      const findex = allFields.map((f) => f.name).indexOf(name);
+      if (findex === -1) {
+        return p;
+      }
+
+      const f = allFields[findex];
+
+      if (!f.transforms) {
+        const value = biosampleValueToString(data[name]);
+        return p.replace(`#${name}`, value);
+      }
+
+      return p.replace(`#${name}`, recursiveTransform(data, f, allFields));
+    }, t.template.replace("#self", self));
+  }, self);
 }
 
 function biosampleValueToString(val: BiosampleValue): string {
@@ -99,6 +130,16 @@ function generateDDBJTemplateTsv(
           return;
         } else if (f.name === "sample_title") {
           elems.push(attachReplicateToSampleTitle(val, i + 1));
+          return;
+        }
+
+        // processing transform definition
+        // ある値の時に他のデータを参照しながら値を変更できる
+        if (f.transforms && f.transforms.length !== 0) {
+          const e = recursiveTransform(d, f, fields);
+          console.log(e);
+          elems.push(e);
+
           return;
         }
 
