@@ -16,7 +16,13 @@ const ConditionalFieldForm = ({ field }: ConditionalFieldFormProps) => {
 
   return (
     <>
-      {isDepend(val, dependValue, dependType) ? <FieldFormBase field={fieldBase} /> : null}
+      {isDepend(val, dependValue, dependType)
+        ? (
+          <div className="ml-5">
+            <FieldFormBase field={fieldBase} />
+          </div>
+        )
+        : null}
     </>
   );
 };

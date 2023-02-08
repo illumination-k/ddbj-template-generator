@@ -15,6 +15,7 @@ import { attachAstarisks } from "@/client/libs/tsvHeader";
 import { Field } from "@/client/types/field";
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import FieldForm from "../FieldForm";
+import PreviewTsv from "../PreviewTsv";
 
 type BiosampleValueScalar = string | number | undefined;
 
@@ -41,9 +42,16 @@ function biosampleValueScalerToString(val: BiosampleValueScalar): string {
   }
 }
 
-function recursiveTransform(data: BiosampleData, curField: Field, allFields: Field[]): string {
+// Fieldのtransformsを再帰的に適用する
+// 循環参照にならないように注意
+// 最高再帰回数は5
+function recursiveTransform(data: BiosampleData, curField: Field, allFields: Field[], depth: number = 0): string {
   const self = biosampleValueToString(data[curField.name]);
   if (!curField.transforms) {
+    return self;
+  }
+
+  if (depth > 5) {
     return self;
   }
 
@@ -66,7 +74,7 @@ function recursiveTransform(data: BiosampleData, curField: Field, allFields: Fie
         return p.replace(`#${name}`, value);
       }
 
-      return p.replace(`#${name}`, recursiveTransform(data, f, allFields));
+      return p.replace(`#${name}`, recursiveTransform(data, f, allFields, depth + 1));
     }, t.template.replace("#self", self));
   }, self);
 }
@@ -137,7 +145,6 @@ function generateDDBJTemplateTsv(
         // ある値の時に他のデータを参照しながら値を変更できる
         if (f.transforms && f.transforms.length !== 0) {
           const e = recursiveTransform(d, f, fields);
-          console.log(e);
           elems.push(e);
 
           return;
@@ -155,6 +162,11 @@ function generateDDBJTemplateTsv(
   });
 
   let emptyFlags: boolean[] = [];
+
+  if (body.length === 0) {
+    return [header.join(sep)];
+  }
+
   for (let x = 0; x < body[0].length; x++) {
     let ok = false;
     for (let y = 0; y < body.length; y++) {
@@ -294,8 +306,9 @@ const BiosampleForm = ({}) => {
 
               {/* Generation Button Items */}
               <div className="flex">
-                <Button
-                  onClick={() => {
+                <PreviewTsv
+                  bioproject_id={bioproject_id}
+                  tsvGenerator={() => {
                     const lines = generateDDBJTemplateTsv(
                       data,
                       fields,
@@ -308,17 +321,9 @@ const BiosampleForm = ({}) => {
                       },
                     );
 
-                    const file = new Blob([lines.join("\n")], { type: "text/plain" });
-                    const element = document.createElement("a");
-                    element.href = URL.createObjectURL(file);
-                    element.download = `${bioproject_id}.tsv`;
-
-                    document.body.appendChild(element);
-                    element.click();
+                    return lines.join("\n");
                   }}
-                >
-                  Generate Template
-                </Button>
+                />
               </div>
             </div>
           </div>

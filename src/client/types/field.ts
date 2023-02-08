@@ -15,6 +15,7 @@ type FieldBase = {
   name: string;
   help?: string;
   comment?: string;
+  errorTemplate?: string;
   required: boolean;
   transforms?: FieldTransform[];
 };

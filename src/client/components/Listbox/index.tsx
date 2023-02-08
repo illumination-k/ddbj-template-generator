@@ -9,19 +9,33 @@ export type ListBoxOption = string;
 export type ListBoxProps = {
   className?: string;
   options: ListBoxOption[];
+  defaultOption?: ListBoxOption;
   onChange?: (value: ListBoxOption) => void;
 } & UseControllerProps;
 
 export const ListBox = ({
   className,
   options,
+  defaultOption,
   onChange = (value) => {
     console.log(value);
   },
   ...controllerProps
 }: ListBoxProps) => {
-  const [selected, setSelected] = useState(options[0]);
-  const { field: { onChange: onControllerChange } } = useController({ ...controllerProps, defaultValue: selected });
+  const [selected, setSelected] = useState(defaultOption || options[0]);
+  const { field: { onChange: onControllerChange }, formState: { defaultValues } } = useController({
+    ...controllerProps,
+    defaultValue: selected,
+  });
+
+  // When calling reset, should change selected value
+  const { name } = controllerProps;
+
+  useEffect(() => {
+    if (defaultValues) {
+      setSelected(defaultValues[name] || options[0]);
+    }
+  }, [defaultValues, setSelected, name, options]);
 
   return (
     <div className="top-16 w-72">

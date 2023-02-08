@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="grid grid-cols-1 place-items-center">
-      <h1>DDBJ Template Generator</h1>
+      <h1>DDBJ Template Generator (Beta)</h1>
       <h2>Biosample</h2>
       <form
         onSubmit={handleSubmit((data) => {

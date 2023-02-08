@@ -123,6 +123,7 @@ const basicFields: Field[] = [{
     "Progenies of",
     "Other",
   ],
+  defaultValue: "Tak-1",
   transforms: [
     {
       template: "Other (#unregistered_isolate)",
@@ -217,7 +218,7 @@ const basicFields: Field[] = [{
   label: "Sex",
   name: "sex",
   required: true,
-  options: ["female", "male", "hermaphrodite", "pooled male and female", "missing"],
+  options: ["female", "male", "hermaphrodite", "pooled male and female", "not determined"],
 }, {
   type: "input",
   label: "Age",
@@ -300,6 +301,7 @@ const materialAndMedhodFields: Field[] = [
     name: "growth_protocol",
     required: true,
     defaultValue: "",
+    example: "Example!",
   },
   {
     type: "text",

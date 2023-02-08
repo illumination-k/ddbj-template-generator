@@ -8,6 +8,7 @@ import LabelWithHelp from "./LabelWithHelp";
 
 import { UnconditionalField } from "@/client/types/field";
 import ArrayInput from "./ArrayInput";
+import ErrorMessage from "./ErrorMessage";
 import NestedArrayInput from "./NestedArrayInput";
 import TextForm from "./TextForm";
 
@@ -28,6 +29,7 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
             type={isNumber ? "number" : undefined}
             {...register(name, { required, valueAsNumber: isNumber, pattern })}
           />
+          <ErrorMessage field={field} />
         </LabelWithHelp>
       );
     }
@@ -45,6 +47,7 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
       return (
         <LabelWithHelp label={label} help={help} required={required}>
           <ListBox options={options} name={name} rules={{ required }} {...control} />
+          <ErrorMessage field={field} />
         </LabelWithHelp>
       );
     }
@@ -73,6 +76,7 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
               </div>
             ))}
           </div>
+          <ErrorMessage field={field} />
         </LabelWithHelp>
       );
     }
