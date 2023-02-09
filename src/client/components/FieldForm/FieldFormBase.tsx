@@ -21,17 +21,33 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
 
   switch (field.type) {
     case "input": {
-      const { name, label, required, help, comment, isNumber, pattern } = field;
-      return (
-        <LabelWithHelp label={label} help={help} required={required} comment={comment}>
-          <Input
-            id={name}
-            type={isNumber ? "number" : undefined}
-            {...register(name, { required, valueAsNumber: isNumber, pattern })}
-          />
-          <ErrorMessage field={field} />
-        </LabelWithHelp>
-      );
+      const { name, label, required, help, comment, isNumber } = field;
+
+      if (field.isNumber) {
+        const { name, label, required, help, comment, isNumber, min, max, defaultValue } = field;
+        return (
+          <LabelWithHelp label={label} help={help} required={required} comment={comment}>
+            <Input
+              id={name}
+              type={isNumber ? "number" : undefined}
+              {...register(name, { required, valueAsNumber: isNumber, min, max })}
+            />
+            <ErrorMessage field={field} />
+          </LabelWithHelp>
+        );
+      } else {
+        const { name, label, required, help, comment, pattern, defaultValue } = field;
+        return (
+          <LabelWithHelp label={label} help={help} required={required} comment={comment}>
+            <Input
+              id={name}
+              type={isNumber ? "number" : undefined}
+              {...register(name, { required, valueAsNumber: isNumber, pattern })}
+            />
+            <ErrorMessage field={field} />
+          </LabelWithHelp>
+        );
+      }
     }
 
     case "text": {

@@ -20,9 +20,25 @@ type FieldBase = {
   transforms?: FieldTransform[];
 };
 
+type InputNumberField = {
+  isNumber: true;
+  min?: number;
+  max?: number;
+  defaultValue?: number;
+};
+
+type InputStringField = {
+  isNumber?: false;
+  pattern?: RegExp;
+  defaultValue?: string;
+};
+
+type InputFieldType = InputNumberField | InputStringField;
+
 export type InputField =
-  & { type: "input"; isNumber?: boolean; pattern?: RegExp; defaultValue: number | string }
-  & FieldBase;
+  & { type: "input" }
+  & FieldBase
+  & InputFieldType;
 
 export type TextField = { type: "text"; example?: string; defaultValue: string } & FieldBase;
 export type SelectField = { type: "select"; options: string[]; defaultValue?: string } & FieldBase;
@@ -38,10 +54,8 @@ type NestedArraySchemaBase = {
 type NestedArraySchemaInput =
   & {
     type: "input";
-    isNumber?: boolean;
-    pattern?: RegExp;
-    defaultValue: number | string;
   }
+  & InputFieldType
   & NestedArraySchemaBase;
 
 type NestedArraySchemaSelect = {

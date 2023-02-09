@@ -55,14 +55,12 @@ const basicFields: Field[] = [{
   help: "Unique sample name in this submission",
   required: true,
   type: "input",
-  defaultValue: "",
 }, {
   label: "Sample Title",
   name: "sample_title",
   help: "Unique sample title in this submission",
   required: true,
   type: "input",
-  defaultValue: "",
 }, {
   type: "input",
   label: "Biological replicates number",
@@ -70,6 +68,7 @@ const basicFields: Field[] = [{
   required: true,
   isNumber: true,
   defaultValue: 3,
+  min: 1,
 }, {
   type: "select",
   label: "Tissue",
