@@ -8,14 +8,14 @@ import { Chip } from "@/client/components/Chip";
 
 import PreviewTable from "@/client/components/PreviewTable";
 
+import FieldForm from "@/client/components/FieldForm";
+import PreviewTsv from "@/client/components/PreviewTsv";
 import createCtx from "@/client/libs/createCtx";
 import isDepend from "@/client/libs/isDepend";
 import { attachReplicateToSamplename, attachReplicateToSampleTitle } from "@/client/libs/replicates";
 import { attachAstarisks } from "@/client/libs/tsvHeader";
 import { Field } from "@/client/types/field";
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import FieldForm from "../FieldForm";
-import PreviewTsv from "../PreviewTsv";
 
 type BiosampleValueScalar = string | number | undefined;
 
@@ -229,6 +229,9 @@ const BiosampleForm = ({}) => {
   // const taxonomy_id = "1480154";
 
   const onSubmit = (formData: BiosampleData) => {
+    // need validation here
+    // 1. combination requirement
+    // 2. unique sample_name and sample_title
     if (curData) {
       data[curData.index] = formData;
       setData([...data]);
@@ -250,7 +253,7 @@ const BiosampleForm = ({}) => {
           <form onSubmit={method.handleSubmit(onSubmit)}>
             {fields.map((f, i) => <FieldForm field={f} key={i} />)}
             <div className="flex justify-end">
-              <Button type="submit">{curData ? "Save" : "Submit"} Sample Information</Button>
+              <Button type="submit">Save Sample Information</Button>
             </div>
           </form>
 
@@ -266,46 +269,55 @@ const BiosampleForm = ({}) => {
               />
 
               {/* Saved Items */}
-              <div className="flex flex-wrap gap-3 py-5">
-                {data.map((d, i) => {
-                  const isSelected = curData && curData.index === i;
-                  return (
-                    <Chip
-                      className={tw(apply("flex items-center", isSelected ? "bg-blue-100" : ""))}
-                      key={i}
-                    >
-                      <p className="pr-3 font-bold text-xl">
-                        {`${d["sample_title"] as string} (${d["replicates_number"] as number})`}
-                      </p>
-
-                      {/* Edit button */}
-                      <button
-                        onClick={() => {
-                          method.reset(d);
-                          setCurData({ index: i, data: { ...data[i] } });
-                        }}
+              <div className="min-h-[11rem] bg-gray-100 rounded-lg my-5">
+                {data.length === 0
+                  ? (
+                    <p className="px-3 py-3 text-2xl font-semibold">
+                      No sample is saved
+                    </p>
+                  )
+                  : ""}
+                <div className="flex flex-wrap gap-3 px-2 py-3">
+                  {data.map((d, i) => {
+                    const isSelected = curData && curData.index === i;
+                    return (
+                      <Chip
+                        className={tw(apply("flex items-center", isSelected ? "bg-blue-100" : ""))}
+                        key={i}
                       >
-                        <PencilSquareIcon className="h-6 w-6" />
-                      </button>
+                        <p className="pr-3 font-bold text-xl">
+                          {`${d["sample_title"] as string} (${d["replicates_number"] as number})`}
+                        </p>
 
-                      {/* delete button */}
-                      <button
-                        onClick={() => {
-                          method.reset(defaultValues);
-                          setCurData(undefined);
-                          data.splice(i, 1);
-                          setData([...data]);
-                        }}
-                      >
-                        <XMarkIcon className="h-6 w-6" />
-                      </button>
-                    </Chip>
-                  );
-                })}
+                        {/* Edit button */}
+                        <button
+                          onClick={() => {
+                            method.reset(d);
+                            setCurData({ index: i, data: { ...data[i] } });
+                          }}
+                        >
+                          <PencilSquareIcon className="h-6 w-6" />
+                        </button>
+
+                        {/* delete button */}
+                        <button
+                          onClick={() => {
+                            method.reset(defaultValues);
+                            setCurData(undefined);
+                            data.splice(i, 1);
+                            setData([...data]);
+                          }}
+                        >
+                          <XMarkIcon className="h-6 w-6" />
+                        </button>
+                      </Chip>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Generation Button Items */}
-              <div className="flex">
+              <div className="flex justify-end">
                 <PreviewTsv
                   bioproject_id={bioproject_id}
                   tsvGenerator={() => {

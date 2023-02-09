@@ -6,7 +6,8 @@ import BiosampleForm, {
   BiosampleCurrentData,
   BiosampleData,
   BiosampleFormContextProvider,
-} from "@/client/components/BisampleForm";
+} from "@/client/features/biosample/BiosampleForm";
+
 import { Field } from "@/client/types/field";
 
 /*
@@ -51,14 +52,14 @@ xsdなど
 const basicFields: Field[] = [{
   label: "Sample Name",
   name: "sample_name",
-  help: "Unique sample name in this submit",
+  help: "Unique sample name in this submission",
   required: true,
   type: "input",
   defaultValue: "",
 }, {
   label: "Sample Title",
   name: "sample_title",
-  help: "Unique sample title in this submit",
+  help: "Unique sample title in this submission",
   required: true,
   type: "input",
   defaultValue: "",
@@ -85,8 +86,8 @@ const basicFields: Field[] = [{
     "Sporophyte",
     "Antheridiophore",
     "Archegoniophore",
+    "Antheridium",
     "Archegonium",
-    "Archegonia",
     "Oil body",
     "Unregistered",
   ],
@@ -103,7 +104,7 @@ const basicFields: Field[] = [{
   ],
 }, {
   type: "input",
-  label: "Unregistered tissue name",
+  label: "Specify tissue name",
   name: "unregistered_tissue",
   required: true,
   depend: "tissue",
@@ -146,7 +147,7 @@ const basicFields: Field[] = [{
   ],
 }, {
   type: "input",
-  label: "Other isolate name",
+  label: "Specify isolate name",
   name: "unregistered_isolate",
   required: true,
   depend: "isolate",
@@ -176,7 +177,7 @@ const basicFields: Field[] = [{
   ],
 }, {
   type: "input",
-  label: "Other maternal isolate name",
+  label: "Specify maternal isolate name",
   name: "unregistered_maternal_isolate",
   required: true,
   depend: "maternal_isolate",
@@ -206,7 +207,7 @@ const basicFields: Field[] = [{
   ],
 }, {
   type: "input",
-  label: "Other paternal isolate name",
+  label: "Specify paternal isolate name",
   name: "unregistered_paternal_isolate",
   required: true,
   depend: "paternal_isolate",
@@ -304,12 +305,32 @@ const materialAndMedhodFields: Field[] = [
     example: "Example!",
   },
   {
+    type: "select",
+    label: "Sample type",
+    name: "sample_type",
+    required: true,
+    options: ["Whole organism", "Tissue sample", "Other"],
+  },
+  {
+    type: "input",
+    label: "Specify sample type",
+    name: "unregistered_sample_type",
+    required: true,
+    defaultValue: "",
+    depend: "sample_type",
+    dependValue: "Other",
+    dependType: "eq",
+  },
+  {
     type: "text",
     label: "Sampling Protocol",
     name: "sampling_protocol",
     required: false,
     comment: "Optional",
     defaultValue: "",
+    depend: "sample_type",
+    dependValue: "Tissue sample",
+    dependType: "eq",
   },
 ];
 

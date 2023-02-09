@@ -53,10 +53,10 @@ const NestedArrayInput = ({ field }: NestedArrayInputProps) => {
         );
       })}
       <div className="flex justify-end">
-        <button onClick={() => append(createDefaultValue(field.schemas), { focusIndex: 0 })}>
+        <button type="button" onClick={() => append(createDefaultValue(field.schemas))}>
           <PlusCircleIcon className="h-8 w-8" />
         </button>
-        <button onClick={() => remove(-1)}>
+        <button type="button" onClick={() => remove(-1)}>
           <MinusCircleIcon className="h-8 w-8" />
         </button>
       </div>
