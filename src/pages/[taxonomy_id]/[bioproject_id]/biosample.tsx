@@ -63,7 +63,7 @@ const basicFields: Field[] = [{
   type: "input",
 }, {
   type: "input",
-  label: "Biological replicates number",
+  label: "Number of biological replicates",
   name: "replicates_number",
   required: true,
   isNumber: true,
@@ -90,6 +90,7 @@ const basicFields: Field[] = [{
     "Oil body",
     "Unregistered",
   ],
+  defaultValue: "Thallus",
   transforms: [
     {
       template: "#unregistered_tissue (Unregistered)",
@@ -309,6 +310,7 @@ const materialAndMedhodFields: Field[] = [
     name: "sample_type",
     required: true,
     options: ["Whole organism", "Tissue sample", "Other"],
+    defaultValue: "Whole organism",
   },
   {
     type: "input",

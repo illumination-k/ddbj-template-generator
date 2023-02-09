@@ -15,7 +15,7 @@ import isDepend from "@/client/libs/isDepend";
 import { attachReplicateToSamplename, attachReplicateToSampleTitle } from "@/client/libs/replicates";
 import { attachAstarisks } from "@/client/libs/tsvHeader";
 import { Field } from "@/client/types/field";
-import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type BiosampleValueScalar = string | number | undefined;
 
@@ -117,7 +117,7 @@ function generateDDBJTemplateTsv(
   const header: string[] = (fields.map((f) => attachAstarisks(f.name))).concat(Object.keys(fixedData));
   // 最終行にreplicateの情報を加える
   // https://www.ddbj.nig.ac.jp/biosample/validation.html#BS_R0024
-  header.push("replicate");
+  header.push("biological_replicate");
 
   const fixedBodyData = Object.values(fixedData);
 
@@ -206,7 +206,7 @@ function useBiosampleFormContext() {
       return;
     }
 
-    defaultValues[f.name] = f.defaultValue;
+    defaultValues[f.name] = f.defaultValue || "";
   });
 
   return {
@@ -240,7 +240,10 @@ const BiosampleForm = ({}) => {
     }
 
     setCurData(undefined);
-    method.reset(defaultValues);
+
+    // only reset sample name and sample title
+    // because similar sample is often submitted
+    method.reset({ ...formData, ...{ sample_name: "", sample_title: "" } });
   };
 
   return (
@@ -252,7 +255,11 @@ const BiosampleForm = ({}) => {
           {/* Form */}
           <form onSubmit={method.handleSubmit(onSubmit)}>
             {fields.map((f, i) => <FieldForm field={f} key={i} />)}
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-3 pt-2 pb-7">
+              <Button type="button" className="flex gap-2 items-center" onClick={() => method.reset(defaultValues)}>
+                <ArrowPathIcon className="h-5 w-5" />
+                <p>Reset Form</p>
+              </Button>
               <Button type="submit">Save Sample Information</Button>
             </div>
           </form>
