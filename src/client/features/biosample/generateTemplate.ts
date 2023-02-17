@@ -5,12 +5,12 @@ import { BiosampleData, BiosampleValue, BiosampleValueScalar } from "./types";
 
 type SampleType = "plant";
 
-const ddbj_schema = {
+export const ddbj_schema = {
   plant: {
     required: [
       "sample_name",
       "sample_title",
-      "organism",
+      // "organism" // Organism is registered in schema level
       "geo_loc_name",
     ],
     combination_required: [
@@ -46,7 +46,7 @@ function attachReplicateToSampleTitle(sample_title: string, replicateNumber: num
   return `${sample_title} replicate-${replicateNumber}`;
 }
 
-function biosampleValueScalerToString(val: BiosampleValueScalar): string {
+export function biosampleValueScalerToString(val: BiosampleValueScalar): string {
   if (!val) {
     return "";
   } else if (typeof val === "string") {
@@ -99,7 +99,7 @@ function recursiveTransform(data: BiosampleData, curField: Field, allFields: Fie
   }, self);
 }
 
-function biosampleValueToString(val: BiosampleValue): string {
+export function biosampleValueToString(val: BiosampleValue): string {
   if (!val) {
     return "";
   } else if (typeof val === "string") {

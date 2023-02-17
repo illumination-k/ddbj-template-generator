@@ -1,6 +1,6 @@
 import { apply, tw } from "@twind/core";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { Button } from "@/client/components/Button";
@@ -15,8 +15,10 @@ import createCtx from "@/client/libs/createCtx";
 import { Field } from "@/client/types/field";
 import { ArrowPathIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
+import ErrorMessage from "@/client/components/FieldForm/ErrorMessage";
 import { generateDDBJTemplateTsv } from "./generateTemplate";
 import { BiosampleData } from "./types";
+import { validateData } from "./validation";
 
 export type { BiosampleData };
 export type BiosampleCurrentData = { index: number; data: BiosampleData } | undefined;
@@ -74,7 +76,7 @@ const BiosampleForm = ({}) => {
   } = useBiosampleFormContext();
 
   const method = useForm<BiosampleData>({ shouldUnregister: true, defaultValues });
-
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
   // const organism = "Marchantia polymorpha subsp. ruderalis";
   // const taxonomy_id = "1480154";
 
@@ -82,6 +84,18 @@ const BiosampleForm = ({}) => {
     // need validation here
     // 1. combination requirement
     // 2. unique sample_name and sample_title
+    setErrorMessages([]);
+    const errors = validateData(
+      formData,
+      curData ? data.filter((_, i) => i !== curData.index) : data,
+      fixedData,
+    );
+
+    if (errors.length != 0) {
+      setErrorMessages(errors);
+      return;
+    }
+
     if (curData) {
       data[curData.index] = formData;
       setData([...data]);
@@ -105,6 +119,11 @@ const BiosampleForm = ({}) => {
           {/* Form */}
           <form onSubmit={method.handleSubmit(onSubmit)}>
             {fields.map((f, i) => <FieldForm field={f} key={i} />)}
+
+            {errorMessages.length !== 0
+              ? <>{errorMessages.map((m, i) => <p key={i} className="text-red-500">{m}</p>)}</>
+              : <></>}
+
             <div className="flex justify-end gap-3 pt-2 pb-7">
               <Button type="button" className="flex gap-2 items-center" onClick={() => method.reset(defaultValues)}>
                 <ArrowPathIcon className="h-5 w-5" />
@@ -186,7 +205,7 @@ const BiosampleForm = ({}) => {
                         organism,
                         sub_species,
                         taxonomy_id,
-                        generated_by: "biosample_template_generator",
+                        generated_by: "biosample_generator",
                         ...fixedData,
                       },
                     );
