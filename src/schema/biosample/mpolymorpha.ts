@@ -1,0 +1,286 @@
+import { Field } from "@/client/types/field";
+import { BiosampleTaxonomySchema } from ".";
+import { baseFields } from "./base";
+
+const basicFields: Field[] = [{
+  type: "select",
+  label: "Tissue",
+  name: "tissue",
+  help: "Sampling Tissue",
+  required: true,
+  options: [
+    "Thallus",
+    "Gemme",
+    "Gemma cup",
+    "Notch",
+    "Midrib",
+    "Sporeling",
+    "Sporophyte",
+    "Antheridiophore",
+    "Archegoniophore",
+    "Antheridium",
+    "Archegonium",
+    "Oil body",
+    "Unregistered",
+  ],
+  defaultValue: "Thallus",
+  transforms: [
+    {
+      template: "#unregistered_tissue (Unregistered)",
+      replace_names: ["unregistered_tissue"],
+      depend_def: {
+        depend: "tissue",
+        dependValue: "Unregistered",
+        dependType: "eq",
+      },
+    },
+  ],
+}, {
+  type: "input",
+  label: "Specify tissue name",
+  name: "unregistered_tissue",
+  required: true,
+  depend: "tissue",
+  dependValue: "Unregistered",
+  dependType: "eq",
+  defaultValue: "",
+}, {
+  label: "Isolate",
+  name: "isolate",
+  help: "Isolate",
+  required: true,
+  type: "select",
+  options: [
+    "Tak-1",
+    "Tak-2",
+    "Kit-2",
+    "Progenies of",
+    "Other",
+  ],
+  defaultValue: "Tak-1",
+  transforms: [
+    {
+      template: "Other (#unregistered_isolate)",
+      replace_names: ["unregistered_isolate"],
+      depend_def: {
+        depend: "isolate",
+        dependValue: "Other",
+        dependType: "eq",
+      },
+    },
+    {
+      template: "Progenesis of #maternal_isolate and #paternal_isolate",
+      replace_names: ["maternal_isolate", "paternal_isolate"],
+      depend_def: {
+        depend: "isolate",
+        dependValue: "Progenies of",
+        dependType: "eq",
+      },
+    },
+  ],
+}, {
+  type: "input",
+  label: "Specify isolate name",
+  name: "unregistered_isolate",
+  required: true,
+  depend: "isolate",
+  dependValue: "Other",
+  dependType: "eq",
+  defaultValue: "",
+}, {
+  label: "Maternal Isolate",
+  name: "maternal_isolate",
+  help: "Isolate",
+  required: true,
+  type: "select",
+  options: ["Tak-2", "Kit-2", "Other"],
+  depend: "isolate",
+  dependValue: "Progenies of",
+  dependType: "eq",
+  transforms: [
+    {
+      template: "Other (#unregistered_maternal_isolate)",
+      replace_names: ["unregistered_maternal_isolate"],
+      depend_def: {
+        depend: "maternal_isolate",
+        dependValue: "Other",
+        dependType: "eq",
+      },
+    },
+  ],
+}, {
+  type: "input",
+  label: "Specify maternal isolate name",
+  name: "unregistered_maternal_isolate",
+  required: true,
+  depend: "maternal_isolate",
+  dependValue: "Other",
+  dependType: "eq",
+  defaultValue: "",
+}, {
+  label: "Paternal Isolate",
+  name: "paternal_isolate",
+  help: "Isolate",
+  required: true,
+  type: "select",
+  options: ["Tak-1", "Other"],
+  depend: "isolate",
+  dependValue: "Progenies of",
+  dependType: "eq",
+  transforms: [
+    {
+      template: "Other (#unregistered_paternal_isolate)",
+      replace_names: ["unregistered_paternal_isolate"],
+      depend_def: {
+        depend: "paternal_isolate",
+        dependValue: "Other",
+        dependType: "eq",
+      },
+    },
+  ],
+}, {
+  type: "input",
+  label: "Specify paternal isolate name",
+  name: "unregistered_paternal_isolate",
+  required: true,
+  depend: "paternal_isolate",
+  dependValue: "Other",
+  dependType: "eq",
+  defaultValue: "",
+}, {
+  type: "radio",
+  label: "Sex",
+  name: "sex",
+  required: true,
+  options: ["female", "male", "hermaphrodite", "pooled male and female", "not determined"],
+}, {
+  type: "input",
+  label: "Age",
+  name: "age",
+  comment: "Age or Development Stage is required",
+  required: false,
+  defaultValue: "",
+}, {
+  type: "input",
+  label: "Development Stage",
+  name: "dev_stage",
+  comment: "Age or Development Stage is required",
+  required: false,
+  defaultValue: "",
+}];
+
+const genotypeFields: Field[] = [
+  {
+    type: "radio",
+    label: "Strain type",
+    name: "strain_type",
+    options: ["WT", "Mutant"],
+    defaultValue: "WT",
+    required: true,
+  },
+  {
+    type: "input",
+    label: "Mutant name",
+    name: "mutant_name",
+    required: false,
+    comment: "Optional",
+    depend: "strain_type",
+    dependValue: "WT",
+    dependType: "nq",
+    defaultValue: "",
+  },
+  {
+    type: "nestedarray",
+    label: "Causal Genes",
+    name: "causal_genes",
+    help: "If causal gene is not specified, do not enter anything",
+    required: false,
+    schemas: [
+      {
+        type: "input",
+        name: "mp_gene_id",
+        label: "MpGeneID",
+        required: true,
+        defaultValue: "",
+      },
+      {
+        type: "select",
+        label: "Expression",
+        name: "expression",
+        defaultValue: "null",
+        options: ["null", "overexpression", "knockdown", "endogenous", "not specified"],
+      },
+    ],
+    depend: "strain_type",
+    dependValue: "WT",
+    dependType: "nq",
+  },
+  {
+    type: "text",
+    label: "Mutant construction protocol",
+    name: "mutant_construction_protocol",
+    required: false,
+    comment: "Optional",
+    depend: "strain_type",
+    dependValue: "WT",
+    dependType: "nq",
+    defaultValue: "",
+  },
+];
+
+const materialAndMedhodFields: Field[] = [
+  {
+    type: "text",
+    label: "Growth Protocol",
+    name: "growth_protocol",
+    required: true,
+    defaultValue: "",
+    example: "Example!",
+  },
+  {
+    type: "select",
+    label: "Sample type",
+    name: "sample_type",
+    required: true,
+    options: ["Whole organism", "Tissue sample", "Other"],
+    defaultValue: "Whole organism",
+  },
+  {
+    type: "input",
+    label: "Specify sample type",
+    name: "unregistered_sample_type",
+    required: true,
+    defaultValue: "",
+    depend: "sample_type",
+    dependValue: "Other",
+    dependType: "eq",
+  },
+  {
+    type: "text",
+    label: "Sampling Protocol",
+    name: "sampling_protocol",
+    required: false,
+    comment: "Optional",
+    defaultValue: "",
+    depend: "sample_type",
+    dependValue: "Tissue sample",
+    dependType: "eq",
+  },
+];
+
+export const MPOLYMORPHA_TAXONOMY_ID = "1480154";
+
+export const MPOLYMORPHA_SCHEMA: BiosampleTaxonomySchema = {
+  type: "plant",
+  fixedData: {
+    geo_loc_name: "not applicable",
+  },
+  organism: "Marchantia polymorpha subsp. ruderalis",
+  taxonomy_id: MPOLYMORPHA_TAXONOMY_ID,
+  sub_species: "ruderalis",
+  fields: baseFields.concat(
+    basicFields,
+    genotypeFields,
+    materialAndMedhodFields,
+  ),
+};

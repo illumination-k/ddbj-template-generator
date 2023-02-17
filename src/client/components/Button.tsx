@@ -3,7 +3,7 @@ import React from "react";
 
 type Props = React.ComponentProps<"button">;
 
-export const Button = ({ className, children, ...props }: Props) => {
+export const Button = ({ className, children, type = "button", ...props }: Props) => {
   const baseClassName = tw(apply([
     "px-4",
     "py-2",
@@ -23,7 +23,7 @@ export const Button = ({ className, children, ...props }: Props) => {
   ]));
 
   return (
-    <button {...props} className={tw(apply(baseClassName, className))}>
+    <button type={type} {...props} className={tw(apply(baseClassName, className))}>
       {children}
     </button>
   );
