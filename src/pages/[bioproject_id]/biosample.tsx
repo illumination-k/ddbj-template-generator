@@ -40,7 +40,7 @@ const BiosampleGenerator: NextPage = () => {
         setCurData,
         data,
         setData,
-        fields: schema.fields,
+        formSchemas: schema.formSchemas,
         fixedData: schema.fixedData,
       }}
     >

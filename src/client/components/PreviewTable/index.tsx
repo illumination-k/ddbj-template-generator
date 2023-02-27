@@ -1,15 +1,15 @@
 import isDepend from "@/client/libs/isDepend";
-import { Field } from "@/client/types/field";
+import { FormSchema } from "@/schema/FormSchema";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
 type PreviewTableCellProps = {
-  field: Field;
+  formSchema: FormSchema;
 };
 
 type PreviewTableCellInnerProps = {
   val: any;
-  field: Field;
+  formSchema: FormSchema;
 };
 
 const Td = ({ children }: React.PropsWithChildren) => {
@@ -20,26 +20,15 @@ const Td = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-const PreviewTableCellInner = ({ val, field }: PreviewTableCellInnerProps) => {
-  if (field.type === "arrayinput") {
+const PreviewTableCellInner = ({ val, formSchema }: PreviewTableCellInnerProps) => {
+  if (formSchema.type === "nestedarray") {
     return (
       <tr>
-        <Td>{field.label}</Td>
-        <Td>
-          {val?.filter((v: { value: string }) => v.value !== "").map((v: { value: string }) => v.value).join(", ")}
-        </Td>
-      </tr>
-    );
-  }
-
-  if (field.type === "nestedarray") {
-    return (
-      <tr>
-        <Td>{field.label}</Td>
+        <Td>{formSchema.label}</Td>
         <Td>
           {val
             ? val.map((v: { [key: string]: string | number | undefined }, i: number) => {
-              const displayValue = field.schemas.map((schema) => {
+              const displayValue = formSchema.schemas.map((schema) => {
                 if (val) {
                   return `${schema.label}: ${v[schema.name]}`;
                 } else {
@@ -57,28 +46,29 @@ const PreviewTableCellInner = ({ val, field }: PreviewTableCellInnerProps) => {
 
   return (
     <tr>
-      <Td>{field.label}</Td>
+      <Td>{formSchema.label}</Td>
       <Td>{val}</Td>
     </tr>
   );
 };
 
-const PreviewTableCell = ({ field }: PreviewTableCellProps) => {
+const PreviewTableCell = ({ formSchema }: PreviewTableCellProps) => {
   const { watch } = useFormContext();
-  const val = watch(field.name);
+  const val = watch(formSchema.name);
 
-  if ("depend" in field) {
-    const dependVal = watch(field.depend);
-    const { dependValue, dependType } = field;
+  if ("dependDef" in formSchema) {
+    const { depend, dependValue, dependType } = formSchema.dependDef;
+    const dependVal = watch(depend);
+
     return (
       <>
         {isDepend(dependVal, dependValue, dependType)
-          ? <PreviewTableCellInner val={val} field={field} />
+          ? <PreviewTableCellInner val={val} formSchema={formSchema} />
           : null}
       </>
     );
   } else {
-    return <PreviewTableCellInner val={val} field={field} />;
+    return <PreviewTableCellInner val={val} formSchema={formSchema} />;
   }
 };
 
@@ -86,10 +76,10 @@ export type PreviewTableProps = {
   organism: string;
   taxonomy_id: string;
   bioproject_id: string;
-  fields: Field[];
+  formSchemas: FormSchema[];
 };
 
-const PreviewTable = ({ bioproject_id, organism, taxonomy_id, fields }: PreviewTableProps) => {
+const PreviewTable = ({ bioproject_id, organism, taxonomy_id, formSchemas }: PreviewTableProps) => {
   return (
     <table className="table-fixed">
       <thead className="text-xl text-gray-700 bg-gray-50">
@@ -111,7 +101,7 @@ const PreviewTable = ({ bioproject_id, organism, taxonomy_id, fields }: PreviewT
           <Td>Bioproject ID</Td>
           <Td>{bioproject_id}</Td>
         </tr>
-        {fields.map((f, i) => <PreviewTableCell field={f} key={i} />)}
+        {formSchemas.map((f, i) => <PreviewTableCell formSchema={f} key={i} />)}
       </tbody>
     </table>
   );
