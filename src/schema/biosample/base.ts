@@ -3,13 +3,13 @@ import { Field } from "@/client/types/field";
 export const baseFields: Field[] = [{
   label: "Sample Name",
   name: "sample_name",
-  help: "Unique sample name in this submission",
+  help: "Sample name is the name given to the sample by the registrant, unique per submission.",
   required: true,
   type: "input",
 }, {
   label: "Sample Title",
   name: "sample_title",
-  help: "Unique sample title in this submission",
+  help: "The title should be brief and descriptive of the sample. The title must be unique in this submission.",
   required: true,
   type: "input",
 }, {

@@ -40,7 +40,11 @@ export type InputField =
   & FieldBase
   & InputFieldType;
 
-export type TextField = { type: "text"; example?: string; defaultValue: string } & FieldBase;
+export type TextExample = string | { name: string; content: string }[];
+
+export type TextField =
+  & { type: "text"; example?: string | TextExample; defaultValue: string }
+  & FieldBase;
 export type SelectField = { type: "select"; options: string[]; defaultValue?: string } & FieldBase;
 export type RadioboxField = { type: "radio"; options: string[]; defaultValue?: string } & FieldBase;
 export type ArrayInputField = { type: "arrayinput"; pattern?: RegExp; defaultValue: { value: string }[] } & FieldBase;

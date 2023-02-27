@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ListBox } from "@/client/components/Listbox";
+import { ListBox } from "./Listbox";
 
 import Input from "./Input";
 import LabelWithHelp from "./LabelWithHelp";
@@ -21,7 +21,7 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
 
   switch (field.type) {
     case "input": {
-      const { name, label, required, help, comment, isNumber } = field;
+      const { isNumber } = field;
 
       if (field.isNumber) {
         const { name, label, required, help, comment, isNumber, min, max, defaultValue } = field;
@@ -55,14 +55,14 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
     }
 
     case "select": {
-      const { label, name, help, required, options } = field;
+      const { label, name, help, required, options, defaultValue } = field;
       if (!options || options.length === 0) {
         throw new Error("Option must be array whose length is greater than 1");
       }
 
       return (
         <LabelWithHelp label={label} help={help} required={required}>
-          <ListBox options={options} name={name} rules={{ required }} {...control} />
+          <ListBox options={options} name={name} defaultValue={defaultValue} rules={{ required }} {...control} />
           <ErrorMessage field={field} />
         </LabelWithHelp>
       );

@@ -1,7 +1,7 @@
-import { Listbox, Transition } from "@headlessui/react";
+import { Listbox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { tw } from "@twind/core";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useController, UseControllerProps } from "react-hook-form";
 
 export type ListBoxOption = string;

@@ -15,7 +15,6 @@ import createCtx from "@/client/libs/createCtx";
 import { Field } from "@/client/types/field";
 import { ArrowPathIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import ErrorMessage from "@/client/components/FieldForm/ErrorMessage";
 import { generateDDBJTemplateTsv } from "./generateTemplate";
 import { BiosampleData } from "./types";
 import { validateData } from "./validation";
@@ -77,8 +76,6 @@ const BiosampleForm = ({}) => {
 
   const method = useForm<BiosampleData>({ shouldUnregister: true, defaultValues });
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  // const organism = "Marchantia polymorpha subsp. ruderalis";
-  // const taxonomy_id = "1480154";
 
   const onSubmit = (formData: BiosampleData) => {
     // need validation here

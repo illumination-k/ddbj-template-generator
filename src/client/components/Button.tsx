@@ -1,9 +1,17 @@
 import { apply, tw } from "@twind/core";
 import React from "react";
 
-type Props = React.ComponentProps<"button">;
+type ButtonColor = "primary" | "secondary" | "danger";
 
-export const Button = ({ className, children, type = "button", ...props }: Props) => {
+const buttonColorMap: { [key in ButtonColor]: string } = {
+  primary: "text-white bg-blue-600 hover:bg-blue-500 ring-blue-300",
+  secondary: "text-white bg-green-600 hover:bg-green-500 ring-green-300",
+  danger: "text-white bg-red-600 hover:bg-red-500 ring-red-300",
+};
+
+type Props = React.ComponentProps<"button"> & { color?: ButtonColor };
+
+export const Button = ({ className, children, type = "button", color = "primary", ...props }: Props) => {
   const baseClassName = tw(apply([
     "px-4",
     "py-2",
@@ -14,12 +22,11 @@ export const Button = ({ className, children, type = "button", ...props }: Props
     "transition-colors",
     "duration-200",
     "transform",
-    "bg-blue-600",
     "rounded-md",
-    "hover:bg-blue-500",
     {
-      focus: ["outline-none", "ring", "ring-blue-300", "ring-opacity-80"],
+      focus: ["outline-none", "ring", "ring-opacity-80"],
     },
+    buttonColorMap[color],
   ]));
 
   return (

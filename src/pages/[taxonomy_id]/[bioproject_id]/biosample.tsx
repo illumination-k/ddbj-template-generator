@@ -8,7 +8,7 @@ import BiosampleForm, {
   BiosampleFormContextProvider,
 } from "@/client/features/biosample/BiosampleForm";
 
-import biosample_schema, { BiosampleTaxonomySchema, isTaxonomyId } from "@/schema/biosample";
+import biosample_schema, { isTaxonomyId } from "@/schema/biosample";
 import Error from "next/error";
 
 const BiosampleGenerator: NextPage = () => {

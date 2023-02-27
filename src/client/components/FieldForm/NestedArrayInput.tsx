@@ -2,9 +2,9 @@ import { NestedArrayInputField, NestedArraySchema } from "@/client/types/field";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { ListBox } from "../Listbox";
 import Input from "./Input";
 import LabelWithHelp from "./LabelWithHelp";
+import { ListBox } from "./Listbox";
 
 export type NestedArrayInputProps = {
   field: NestedArrayInputField;
