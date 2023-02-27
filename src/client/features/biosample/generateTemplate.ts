@@ -1,4 +1,4 @@
-import { Field } from "@/client/types/field";
+import { FormSchema } from "@/schema/FormSchema";
 
 import isDepend from "@/client/libs/isDepend";
 import { BiosampleData, BiosampleValue, BiosampleValueScalar } from "./types";
@@ -62,12 +62,17 @@ export function biosampleValueScalerToString(val: BiosampleValueScalar): string 
   }
 }
 
-// Fieldのtransformsを再帰的に適用する
+// FormSchemaのtransformsを再帰的に適用する
 // 循環参照にならないように注意
 // 最高再帰回数は5
-function recursiveTransform(data: BiosampleData, curField: Field, allFields: Field[], depth: number = 0): string {
-  const self = biosampleValueToString(data[curField.name]);
-  if (!curField.transforms) {
+function recursiveTransform(
+  data: BiosampleData,
+  curFormSchema: FormSchema,
+  allFormSchemas: FormSchema[],
+  depth: number = 0,
+): string {
+  const self = biosampleValueToString(data[curFormSchema.name]);
+  if (!curFormSchema.transforms) {
     return self;
   }
 
@@ -75,26 +80,26 @@ function recursiveTransform(data: BiosampleData, curField: Field, allFields: Fie
     return self;
   }
 
-  return curField.transforms.reduce((p, t) => {
+  return curFormSchema.transforms.reduce((p, t) => {
     const { depend, dependValue, dependType } = t.depend_def;
     if (!isDepend(data[depend], dependValue, dependType)) {
       return p;
     }
 
     return t.replace_names.reduce((p, name) => {
-      const findex = allFields.map((f) => f.name).indexOf(name);
+      const findex = allFormSchemas.map((f) => f.name).indexOf(name);
       if (findex === -1) {
         return p;
       }
 
-      const f = allFields[findex];
+      const f = allFormSchemas[findex];
 
       if (!f.transforms) {
         const value = biosampleValueToString(data[name]);
         return p.replace(`#${name}`, value);
       }
 
-      return p.replace(`#${name}`, recursiveTransform(data, f, allFields, depth + 1));
+      return p.replace(`#${name}`, recursiveTransform(data, f, allFormSchemas, depth + 1));
     }, t.template.replace("#self", self));
   }, self);
 }
@@ -129,7 +134,7 @@ export function biosampleValueToString(val: BiosampleValue): string {
 
 export function generateDDBJTemplateTsv(
   data: BiosampleData[],
-  fields: Field[],
+  fields: FormSchema[],
   fixedData: { [key: string]: string | undefined },
   sep = "\t",
 ) {

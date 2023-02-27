@@ -6,25 +6,24 @@ import { ListBox } from "./Listbox";
 import Input from "./Input";
 import LabelWithHelp from "./LabelWithHelp";
 
-import { UnconditionalField } from "@/client/types/field";
-import ArrayInput from "./ArrayInput";
+import { UnconditionalFormSchema } from "@/schema/FormSchema";
 import ErrorMessage from "./ErrorMessage";
 import NestedArrayInput from "./NestedArrayInput";
 import TextForm from "./TextForm";
 
 type FieldFormProps = {
-  field: UnconditionalField;
+  formSchema: UnconditionalFormSchema;
 };
 
-const FieldFormBase = ({ field }: FieldFormProps) => {
+const FieldFormBase = ({ formSchema }: FieldFormProps) => {
   const { register, control } = useFormContext();
 
-  switch (field.type) {
+  switch (formSchema.type) {
     case "input": {
-      const { isNumber } = field;
+      const { isNumber } = formSchema;
 
-      if (field.isNumber) {
-        const { name, label, required, help, comment, isNumber, min, max, defaultValue } = field;
+      if (formSchema.isNumber) {
+        const { name, label, required, help, comment, isNumber, min, max, defaultValue } = formSchema;
         return (
           <LabelWithHelp label={label} help={help} required={required} comment={comment}>
             <Input
@@ -32,11 +31,11 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
               type={isNumber ? "number" : undefined}
               {...register(name, { required, valueAsNumber: isNumber, min, max })}
             />
-            <ErrorMessage field={field} />
+            <ErrorMessage formSchema={formSchema} />
           </LabelWithHelp>
         );
       } else {
-        const { name, label, required, help, comment, pattern, defaultValue } = field;
+        const { name, label, required, help, comment, pattern, defaultValue } = formSchema;
         return (
           <LabelWithHelp label={label} help={help} required={required} comment={comment}>
             <Input
@@ -44,18 +43,18 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
               type={isNumber ? "number" : undefined}
               {...register(name, { required, valueAsNumber: isNumber, pattern })}
             />
-            <ErrorMessage field={field} />
+            <ErrorMessage formSchema={formSchema} />
           </LabelWithHelp>
         );
       }
     }
 
     case "text": {
-      return <TextForm field={field} />;
+      return <TextForm formSchema={formSchema} />;
     }
 
     case "select": {
-      const { label, name, help, required, options, defaultValue } = field;
+      const { label, name, help, required, options, defaultValue } = formSchema;
       if (!options || options.length === 0) {
         throw new Error("Option must be array whose length is greater than 1");
       }
@@ -63,21 +62,17 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
       return (
         <LabelWithHelp label={label} help={help} required={required}>
           <ListBox options={options} name={name} defaultValue={defaultValue} rules={{ required }} {...control} />
-          <ErrorMessage field={field} />
+          <ErrorMessage formSchema={formSchema} />
         </LabelWithHelp>
       );
     }
 
-    case "arrayinput": {
-      return <ArrayInput field={field} />;
-    }
-
     case "nestedarray": {
-      return <NestedArrayInput field={field} />;
+      return <NestedArrayInput formSchema={formSchema} />;
     }
 
     case "radio": {
-      const { label, name, help, required, options } = field;
+      const { label, name, help, required, options } = formSchema;
       if (!options || options.length === 0) {
         throw new Error("Option must be array whose length is greater than 1");
       }
@@ -92,13 +87,13 @@ const FieldFormBase = ({ field }: FieldFormProps) => {
               </div>
             ))}
           </div>
-          <ErrorMessage field={field} />
+          <ErrorMessage formSchema={formSchema} />
         </LabelWithHelp>
       );
     }
 
     default:
-      throw new Error(`Invalid Field: ${field}`);
+      throw new Error(`Invalid Field: ${formSchema}`);
   }
 };
 

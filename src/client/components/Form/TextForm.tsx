@@ -1,6 +1,6 @@
 import { Menu } from "@headlessui/react";
 
-import { TextExample, TextField } from "@/client/types/field";
+import { TextExample, TextFormSchema } from "@/schema/FormSchema";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { apply, tw } from "@twind/core";
 import { useFormContext } from "react-hook-form";
@@ -9,7 +9,7 @@ import ErrorMessage from "./ErrorMessage";
 import HelpPopover from "./HelpPopover";
 import Textarea from "./Textarea";
 
-type TextFormProps = { field: TextField };
+type TextFormProps = { formSchema: TextFormSchema };
 
 type ExampleProps = {
   name: string;
@@ -75,9 +75,9 @@ const Example = ({ name, example }: ExampleProps) => {
   );
 };
 
-const TextForm = ({ field }: TextFormProps) => {
+const TextForm = ({ formSchema }: TextFormProps) => {
   const { register } = useFormContext();
-  const { name, label, help, defaultValue, required, comment, example } = field;
+  const { name, label, help, defaultValue, required, comment, example } = formSchema;
 
   return (
     <div className="my-2">
@@ -95,7 +95,7 @@ const TextForm = ({ field }: TextFormProps) => {
         </div>
       </div>
       <Textarea className="h-24" defaultValue={defaultValue} id={name} {...register(name, { required })} />
-      <ErrorMessage field={field} />
+      <ErrorMessage formSchema={formSchema} />
     </div>
   );
 };

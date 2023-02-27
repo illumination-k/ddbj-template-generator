@@ -1,4 +1,4 @@
-import { Field } from "@/client/types/field";
+import { FormSchema } from "@/schema/FormSchema";
 import { MPOLYMORPHA_SCHEMA, MPOLYMORPHA_TAXONOMY_ID } from "./mpolymorpha";
 
 const TAXONOMY_IDS = [MPOLYMORPHA_TAXONOMY_ID] as const;
@@ -13,13 +13,15 @@ export function isTaxonomyId(id: unknown): id is TaxonomyId {
   return (TAXONOMY_IDS as ReadonlyArray<string>).includes(id);
 }
 
+export type SampleType = "plant";
+
 export type BiosampleTaxonomySchema = {
-  type: "plant";
+  type: SampleType;
   taxonomy_id: string;
   organism: string;
   sub_species?: string;
   fixedData: { [key: string]: string };
-  fields: Field[];
+  formSchemas: FormSchema[];
 };
 
 export type BiosampleSchema = {

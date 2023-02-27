@@ -1,4 +1,4 @@
-import { NestedArrayInputField, NestedArraySchema } from "@/client/types/field";
+import { NestedArrayInputFormSchema, NestedArraySchema } from "@/schema/FormSchema";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -7,7 +7,7 @@ import LabelWithHelp from "./LabelWithHelp";
 import { ListBox } from "./Listbox";
 
 export type NestedArrayInputProps = {
-  field: NestedArrayInputField;
+  formSchema: NestedArrayInputFormSchema;
 };
 
 function createDefaultValue(schema: NestedArraySchema[]) {
@@ -18,8 +18,8 @@ function createDefaultValue(schema: NestedArraySchema[]) {
   }, {} as { [key: string]: string | number | undefined });
 }
 
-const NestedArrayInput = ({ field }: NestedArrayInputProps) => {
-  const { name, help, required, label } = field;
+const NestedArrayInput = ({ formSchema }: NestedArrayInputProps) => {
+  const { name, help, required, label } = formSchema;
   const { register, control } = useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name, shouldUnregister: true });
 
@@ -28,7 +28,7 @@ const NestedArrayInput = ({ field }: NestedArrayInputProps) => {
       {fields.map((f, i) => {
         return (
           <Fragment key={i}>
-            {field.schemas.map((schema) => {
+            {formSchema.schemas.map((schema) => {
               switch (schema.type) {
                 case "input": {
                   return (
@@ -53,7 +53,7 @@ const NestedArrayInput = ({ field }: NestedArrayInputProps) => {
         );
       })}
       <div className="flex justify-end">
-        <button type="button" onClick={() => append(createDefaultValue(field.schemas))}>
+        <button type="button" onClick={() => append(createDefaultValue(formSchema.schemas))}>
           <PlusCircleIcon className="h-8 w-8" />
         </button>
         <button type="button" onClick={() => remove(-1)}>

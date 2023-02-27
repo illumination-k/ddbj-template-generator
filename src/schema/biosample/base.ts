@@ -1,6 +1,6 @@
-import { Field } from "@/client/types/field";
+import { FormSchema } from "@/schema/FormSchema";
 
-export const baseFields: Field[] = [{
+export const baseSchemas: FormSchema[] = [{
   label: "Sample Name",
   name: "sample_name",
   help: "Sample name is the name given to the sample by the registrant, unique per submission.",

@@ -1,16 +1,17 @@
 import isDepend from "@/client/libs/isDepend";
-import { ConditionalField } from "@/client/types/field";
+import { ConditionalFormSchema } from "@/schema/FormSchema";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import FieldFormBase from "./FieldFormBase";
+import FieldFormBase from "./FormBase";
 
 type ConditionalFieldFormProps = {
-  field: ConditionalField;
+  formSchema: ConditionalFormSchema;
 };
 
-const ConditionalFieldForm = ({ field }: ConditionalFieldFormProps) => {
+const ConditionalForm = ({ formSchema }: ConditionalFieldFormProps) => {
   const { watch } = useFormContext();
-  const { depend, dependType, dependValue, ...fieldBase } = field;
+  const { dependDef, ...fieldBase } = formSchema;
+  const { depend, dependType, dependValue } = dependDef;
 
   const val = watch(depend);
 
@@ -19,7 +20,7 @@ const ConditionalFieldForm = ({ field }: ConditionalFieldFormProps) => {
       {isDepend(val, dependValue, dependType)
         ? (
           <div className="ml-5">
-            <FieldFormBase field={fieldBase} />
+            <FieldFormBase formSchema={fieldBase} />
           </div>
         )
         : null}
@@ -27,4 +28,4 @@ const ConditionalFieldForm = ({ field }: ConditionalFieldFormProps) => {
   );
 };
 
-export default ConditionalFieldForm;
+export default ConditionalForm;

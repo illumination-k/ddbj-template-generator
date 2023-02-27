@@ -1,8 +1,7 @@
-import { Field } from "@/client/types/field";
-import { BiosampleTaxonomySchema } from ".";
-import { baseFields } from "./base";
+import { FormSchema } from "@/schema/FormSchema";
+import { baseSchemas } from "../base";
 
-const basicFields: Field[] = [{
+const basicSchemas: FormSchema[] = [{
   type: "select",
   label: "Tissue",
   name: "tissue",
@@ -40,9 +39,11 @@ const basicFields: Field[] = [{
   label: "Specify tissue name",
   name: "unregistered_tissue",
   required: true,
-  depend: "tissue",
-  dependValue: "Unregistered",
-  dependType: "eq",
+  dependDef: {
+    depend: "tissue",
+    dependValue: "Unregistered",
+    dependType: "eq",
+  },
   defaultValue: "",
 }, {
   label: "Isolate",
@@ -92,9 +93,7 @@ const basicFields: Field[] = [{
   label: "Specify isolate name",
   name: "unregistered_isolate",
   required: true,
-  depend: "isolate",
-  dependValue: "Unregistered",
-  dependType: "eq",
+  dependDef: { depend: "isolate", dependValue: "Unregistered", dependType: "eq" },
   defaultValue: "",
 }, {
   label: "Maternal Isolate",
@@ -104,9 +103,11 @@ const basicFields: Field[] = [{
   type: "select",
   options: ["Tak-2", "Kit-2", "Unregistered"],
   defaultValue: "Tak-2",
-  depend: "isolate",
-  dependValue: "Progenies of",
-  dependType: "eq",
+  dependDef: {
+    depend: "isolate",
+    dependValue: "Progenies of",
+    dependType: "eq",
+  },
   transforms: [
     {
       template: "#unregistered_maternal_isolate",
@@ -123,9 +124,7 @@ const basicFields: Field[] = [{
   label: "Specify maternal isolate name",
   name: "unregistered_maternal_isolate",
   required: true,
-  depend: "maternal_isolate",
-  dependValue: "Unregistered",
-  dependType: "eq",
+  dependDef: { depend: "maternal_isolate", dependValue: "Unregistered", dependType: "eq" },
   defaultValue: "",
 }, {
   label: "Paternal Isolate",
@@ -135,9 +134,7 @@ const basicFields: Field[] = [{
   type: "select",
   options: ["Tak-1", "Unregistered"],
   defaultValue: "Tak-1",
-  depend: "isolate",
-  dependValue: "Progenies of",
-  dependType: "eq",
+  dependDef: { depend: "isolate", dependValue: "Progenies of", dependType: "eq" },
   transforms: [
     {
       template: "#unregistered_paternal_isolate",
@@ -154,9 +151,7 @@ const basicFields: Field[] = [{
   label: "Specify paternal isolate name",
   name: "unregistered_paternal_isolate",
   required: true,
-  depend: "paternal_isolate",
-  dependValue: "Unregistered",
-  dependType: "eq",
+  dependDef: { depend: "paternal_isolate", dependValue: "Unregistered", dependType: "eq" },
   defaultValue: "",
 }, {
   type: "radio",
@@ -182,7 +177,7 @@ const basicFields: Field[] = [{
   defaultValue: "",
 }];
 
-const genotypeFields: Field[] = [
+const genotypeSchemas: FormSchema[] = [
   {
     type: "radio",
     label: "Strain type",
@@ -197,9 +192,8 @@ const genotypeFields: Field[] = [
     name: "mutant_name",
     required: false,
     comment: "Optional",
-    depend: "strain_type",
-    dependValue: "WT",
-    dependType: "nq",
+    dependDef: { depend: "strain_type", dependValue: "WT", dependType: "nq" },
+
     defaultValue: "",
   },
   {
@@ -224,9 +218,7 @@ const genotypeFields: Field[] = [
         options: ["null", "overexpression", "knockdown", "endogenous", "not specified"],
       },
     ],
-    depend: "strain_type",
-    dependValue: "WT",
-    dependType: "nq",
+    dependDef: { depend: "strain_type", dependValue: "WT", dependType: "nq" },
   },
   {
     type: "text",
@@ -234,14 +226,12 @@ const genotypeFields: Field[] = [
     name: "mutant_construction_protocol",
     required: false,
     comment: "Optional",
-    depend: "strain_type",
-    dependValue: "WT",
-    dependType: "nq",
+    dependDef: { depend: "strain_type", dependValue: "WT", dependType: "nq" },
     defaultValue: "",
   },
 ];
 
-const materialAndMedhodFields: Field[] = [
+const materialAndMedhodSchemas: FormSchema[] = [
   {
     type: "text",
     label: "Growth Protocol",
@@ -292,9 +282,7 @@ const materialAndMedhodFields: Field[] = [
     name: "unregistered_sample_type",
     required: true,
     defaultValue: "",
-    depend: "sample_type",
-    dependValue: "Unregistered",
-    dependType: "eq",
+    dependDef: { depend: "sample_type", dependValue: "Unregistered", dependType: "eq" },
   },
   {
     type: "text",
@@ -303,9 +291,7 @@ const materialAndMedhodFields: Field[] = [
     required: false,
     comment: "Optional",
     defaultValue: "",
-    depend: "sample_type",
-    dependValue: "Tissue sample",
-    dependType: "eq",
+    dependDef: { depend: "sample_type", dependValue: "Tissue sample", dependType: "eq" },
     example: [
       {
         name: "Gametangiophore",
@@ -322,19 +308,6 @@ const materialAndMedhodFields: Field[] = [
   },
 ];
 
-export const MPOLYMORPHA_TAXONOMY_ID = "1480154";
+const SchemaSchema = baseSchemas.concat(basicSchemas, genotypeSchemas, materialAndMedhodSchemas);
 
-export const MPOLYMORPHA_SCHEMA: BiosampleTaxonomySchema = {
-  type: "plant",
-  fixedData: {
-    geo_loc_name: "not applicable",
-  },
-  organism: "Marchantia polymorpha subsp. ruderalis",
-  taxonomy_id: MPOLYMORPHA_TAXONOMY_ID,
-  sub_species: "ruderalis",
-  fields: baseFields.concat(
-    basicFields,
-    genotypeFields,
-    materialAndMedhodFields,
-  ),
-};
+export default SchemaSchema;

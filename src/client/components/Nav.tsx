@@ -7,7 +7,7 @@ import * as React from "react";
 
 import { SVGProps } from "react";
 import useBioprojectForm from "../hooks/useBioprojectForm";
-import Input from "./FieldForm/Input";
+import Input from "./Form/Input";
 
 const GithubIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 96" {...props}>

@@ -8,11 +8,11 @@ import { Chip } from "@/client/components/Chip";
 
 import PreviewTable from "@/client/components/PreviewTable";
 
-import FieldForm from "@/client/components/FieldForm";
+import FieldForm from "@/client/components/Form";
 import PreviewTsv from "@/client/components/PreviewTsv";
 import createCtx from "@/client/libs/createCtx";
 
-import { Field } from "@/client/types/field";
+import { FormSchema } from "@/schema/FormSchema";
 import { ArrowPathIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { generateDDBJTemplateTsv } from "./generateTemplate";
@@ -27,7 +27,7 @@ type BiosampleFormContextType = {
   sub_species?: string;
   taxonomy_id: string;
   bioproject_id: string;
-  fields: Field[];
+  formSchemas: FormSchema[];
   curData: BiosampleCurrentData;
   fixedData?: { [key: string]: string };
   setCurData: Dispatch<SetStateAction<BiosampleCurrentData>>;
@@ -38,10 +38,10 @@ type BiosampleFormContextType = {
 const [useBiosampleFormContextInner, BiosampleFormContextProvider] = createCtx<BiosampleFormContextType>();
 
 function useBiosampleFormContext() {
-  const { fields, curData, ...rest } = useBiosampleFormContextInner();
+  const { formSchemas, curData, ...rest } = useBiosampleFormContextInner();
 
   let defaultValues: BiosampleData = {};
-  fields.forEach((f) => {
+  formSchemas.forEach((f) => {
     if (f.type === "nestedarray") {
       return;
     }
@@ -50,7 +50,7 @@ function useBiosampleFormContext() {
   });
 
   return {
-    fields,
+    formSchemas,
     curData,
     defaultValues,
     ...rest,
@@ -67,7 +67,7 @@ const BiosampleForm = ({}) => {
     fixedData,
     defaultValues,
     taxonomy_id,
-    fields,
+    formSchemas,
     curData,
     setCurData,
     data,
@@ -113,7 +113,7 @@ const BiosampleForm = ({}) => {
         <FormProvider {...method}>
           {/* Form */}
           <form onSubmit={method.handleSubmit(onSubmit)}>
-            {fields.map((f, i) => <FieldForm field={f} key={i} />)}
+            {formSchemas.map((f, i) => <FieldForm formSchema={f} key={i} />)}
 
             {errorMessages.length !== 0
               ? <>{errorMessages.map((m, i) => <p key={i} className="text-red-500">{m}</p>)}</>
@@ -143,7 +143,7 @@ const BiosampleForm = ({}) => {
                 organism={organism}
                 taxonomy_id={taxonomy_id}
                 bioproject_id={bioproject_id}
-                fields={fields}
+                formSchemas={formSchemas}
               />
 
               {/* Saved Items */}
@@ -208,7 +208,7 @@ const BiosampleForm = ({}) => {
                   tsvGenerator={() => {
                     const lines = generateDDBJTemplateTsv(
                       data,
-                      fields,
+                      formSchemas,
                       {
                         bioproject_id,
                         organism,

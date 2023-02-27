@@ -1,5 +1,5 @@
 import { Button } from "@/client/components/Button";
-import Input from "@/client/components/FieldForm/Input";
+import Input from "@/client/components/Form/Input";
 import Nav from "@/client/components/Nav";
 import { H2 } from "@/client/components/Typography";
 import useBioprojectForm from "@/client/hooks/useBioprojectForm";
