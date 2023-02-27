@@ -49,7 +49,7 @@ const PreviewTsv = ({ tsvGenerator, bioproject_id }: PreviewTsvProps) => {
               >
                 Download
               </Button>
-              <Button onClick={toggle}>Close</Button>
+              <Button color="danger" onClick={toggle}>Close</Button>
             </div>
           </Dialog.Panel>
         </div>

@@ -18,7 +18,7 @@ const LabelWithHelp = ({ className, comment, label, help, required = false, chil
         <label className="flex">
           {required ? <p className={tw("text-red-600")}>*</p> : <></>}
           <p className="px-1">{label}</p>
-          {comment ? <p>({comment})</p> : <></>}
+          {comment ? <p className="flex">({<p dangerouslySetInnerHTML={{ __html: comment }} />})</p> : <></>}
         </label>
 
         {help

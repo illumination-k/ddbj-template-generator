@@ -139,11 +139,14 @@ export function generateDDBJTemplateTsv(
   // https://www.ddbj.nig.ac.jp/biosample/validation.html#BS_R0024
   header.push("biological_replicate");
 
+  // biological replicateのgroupごとに一意のIDをふる
+  header.push("biological_replicate_group_id");
+
   const fixedBodyData = Object.values(fixedData).map((v) => biosampleValueScalerToString(v));
 
   let body: string[][] = [];
 
-  data.forEach((d) => {
+  data.forEach((d, biological_replicate_group_id) => {
     // Number of duplicatesの数だけエレメントを作成
     const replicates_number = d["replicates_number"] as number;
 
@@ -176,7 +179,8 @@ export function generateDDBJTemplateTsv(
       body.push(
         elems
           .concat(fixedBodyData)
-          .concat([`biological replicate ${i + 1}`]),
+          .concat([`biological replicate ${i + 1}`])
+          .concat([`${fixedData["bioproject_id"]}-${biological_replicate_group_id + 1}`]),
       );
     }
   });

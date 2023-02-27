@@ -39,9 +39,9 @@ const Example = ({ name, example }: ExampleProps) => {
       <div>
         <Menu.Button
           className={tw(apply(
-            "inline-flex w-full justify-center",
+            "inline-flex w-full justify-center z-10",
             "rounded-md bg-blue-800",
-            "px-4 py-2 text-sm font-medium text-white",
+            "px-3 py-1 text-sm font-medium text-white",
             "hover:bg-opacity-70",
             "focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
           ))}

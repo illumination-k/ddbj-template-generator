@@ -109,8 +109,6 @@ const BiosampleForm = ({}) => {
 
   return (
     <div className="grid grid-cols-1 place-items-center">
-      <h1 className={tw("text-blue-500 pt-5 pb-8 text-center text-5xl")}>Biosample Form</h1>
-
       <div className={tw("grid grid-cols-2 gap-10 px-10")}>
         <FormProvider {...method}>
           {/* Form */}
@@ -122,11 +120,18 @@ const BiosampleForm = ({}) => {
               : <></>}
 
             <div className="flex justify-end gap-3 pt-2 pb-7">
-              <Button type="button" className="flex gap-2 items-center" onClick={() => method.reset(defaultValues)}>
+              <Button
+                type="button"
+                className="flex gap-2 items-center"
+                color="danger"
+                onClick={() => method.reset(defaultValues)}
+              >
                 <ArrowPathIcon className="h-5 w-5" />
                 <p>Reset Form</p>
               </Button>
-              <Button type="submit">Save Sample Information</Button>
+              <Button type="submit" color={curData ? "secondary" : "primary"}>
+                {curData ? "Save" : "Register"} Sample Information
+              </Button>
             </div>
           </form>
 
@@ -146,7 +151,7 @@ const BiosampleForm = ({}) => {
                 {data.length === 0
                   ? (
                     <p className="px-3 py-3 text-2xl font-semibold">
-                      No sample is saved
+                      No sample is registered
                     </p>
                   )
                   : ""}
@@ -155,7 +160,14 @@ const BiosampleForm = ({}) => {
                     const isSelected = curData && curData.index === i;
                     return (
                       <Chip
-                        className={tw(apply("flex items-center", isSelected ? "bg-blue-100" : ""))}
+                        className={tw(
+                          apply(
+                            "flex items-center",
+                            isSelected
+                              ? "bg-green-600 text-white outline-none ring ring-green-300 ring-opacity-80"
+                              : "",
+                          ),
+                        )}
                         key={i}
                       >
                         <p className="pr-3 font-bold text-xl">

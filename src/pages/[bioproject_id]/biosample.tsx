@@ -8,6 +8,7 @@ import BiosampleForm, {
   BiosampleFormContextProvider,
 } from "@/client/features/biosample/BiosampleForm";
 
+import Nav from "@/client/components/Nav";
 import biosample_schema, { isTaxonomyId } from "@/schema/biosample";
 import Error from "next/error";
 
@@ -20,8 +21,8 @@ const BiosampleGenerator: NextPage = () => {
     return <>Loading...</>;
   }
 
-  const { bioproject_id, taxonomy_id } = router.query;
-
+  const { bioproject_id } = router.query;
+  const taxonomy_id = "1480154";
   const schema = isTaxonomyId(taxonomy_id) ? biosample_schema[taxonomy_id] : null;
 
   if (!schema) {
@@ -43,6 +44,7 @@ const BiosampleGenerator: NextPage = () => {
         fixedData: schema.fixedData,
       }}
     >
+      <Nav />
       <BiosampleForm />
     </BiosampleFormContextProvider>
   );
