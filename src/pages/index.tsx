@@ -45,7 +45,7 @@ const Home: NextPage = () => {
         </div>
 
         <form onSubmit={onSubmit} className="grid grid-cols-1 place-items-center mt-10">
-          <label className="text-2xl text-bold">Bioproject ID</label>
+          <label className="text-2xl">Bioproject ID</label>
           <Input {...registerProps} />
           <Button className="my-2" type="submit">Start Generation</Button>
         </form>

@@ -84,7 +84,7 @@ const PreviewTable = ({ bioproject_id, organism, taxonomy_id, formSchemas }: Pre
     <table className="table-fixed">
       <thead className="text-xl text-gray-700 bg-gray-50">
         <tr>
-          <th className="w96">Attribute Name</th>
+          <th className="w-96">Attribute Name</th>
           <th className="w-96">Attribute Value</th>
         </tr>
       </thead>

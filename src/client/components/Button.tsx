@@ -23,9 +23,7 @@ export const Button = ({ className, children, type = "button", color = "primary"
     "duration-200",
     "transform",
     "rounded-md",
-    {
-      focus: ["outline-none", "ring", "ring-opacity-80"],
-    },
+    "focus:outline-none focus:ring focus:ring-opacity-80",
     buttonColorMap[color],
   ]));
 
