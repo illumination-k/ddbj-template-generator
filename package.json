@@ -1,5 +1,6 @@
 {
   "name": "ddbj-template-generator",
+  "description": "utility to generate biosample template",
   "version": "0.1.0",
   "dependencies": {
     "@headlessui/react": "^1.7.7",
