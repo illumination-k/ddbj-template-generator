@@ -15,6 +15,7 @@ import createCtx from "@/client/libs/createCtx";
 import { FormSchema } from "@/schema/FormSchema";
 import { ArrowPathIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
+import { biological_replicates_number_name } from "@/schema/biosample/base";
 import { generateDDBJTemplateTsv } from "./generateTemplate";
 import { BiosampleData } from "./types";
 import { validateData } from "./validation";
@@ -171,7 +172,7 @@ const BiosampleForm = ({}) => {
                         key={i}
                       >
                         <p className="pr-3 font-bold text-xl">
-                          {`${d["sample_title"] as string} (${d["replicates_number"] as number})`}
+                          {`${d["sample_title"] as string} (${d[biological_replicates_number_name] as number})`}
                         </p>
 
                         {/* Edit button */}
