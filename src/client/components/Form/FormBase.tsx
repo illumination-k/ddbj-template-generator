@@ -23,25 +23,27 @@ const FieldFormBase = ({ formSchema }: FieldFormProps) => {
       const { isNumber } = formSchema;
 
       if (formSchema.isNumber) {
-        const { name, label, required, help, comment, isNumber, min, max } = formSchema;
+        const { name, label, required, help, comment, isNumber, min, max, defaultValue } = formSchema;
         return (
           <LabelWithHelp label={label} help={help} required={required} comment={comment}>
             <Input
               id={name}
               type={isNumber ? "number" : undefined}
+              defaultValue={defaultValue}
               {...register(name, { required, valueAsNumber: isNumber, min, max })}
             />
             <ErrorMessage formSchema={formSchema} />
           </LabelWithHelp>
         );
       } else {
-        const { name, label, required, help, comment, pattern, placeholder } = formSchema;
+        const { name, label, required, help, comment, pattern, defaultValue, placeholder } = formSchema;
         return (
           <LabelWithHelp label={label} help={help} required={required} comment={comment}>
             <Input
               id={name}
               type={isNumber ? "number" : undefined}
               placeholder={placeholder}
+              defaultValue={defaultValue}
               {...register(name, { required, valueAsNumber: isNumber, pattern })}
             />
             <ErrorMessage formSchema={formSchema} />
