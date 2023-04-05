@@ -1,6 +1,7 @@
 import { FormSchema } from "@/schema/FormSchema";
 
 import isDepend from "@/client/libs/isDepend";
+import { biological_replicates_number_name } from "@/schema/biosample/base";
 import { BiosampleData, BiosampleValue, BiosampleValueScalar } from "./types";
 
 type SampleType = "plant";
@@ -153,7 +154,7 @@ export function generateDDBJTemplateTsv(
 
   data.forEach((d, biological_replicate_group_id) => {
     // Number of duplicatesの数だけエレメントを作成
-    const replicates_number = d["replicates_number"] as number;
+    const replicates_number = d[biological_replicates_number_name] as number;
 
     for (let i = 0; i < replicates_number; i++) {
       let elems: string[] = [];

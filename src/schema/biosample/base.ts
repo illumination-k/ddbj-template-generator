@@ -1,5 +1,7 @@
 import { FormSchema } from "@/schema/FormSchema";
 
+export const biological_replicates_number_name = "number_of_biological_replicates";
+
 export const baseSchemas: FormSchema[] = [{
   label: "Sample name",
   name: "sample_name",
@@ -15,7 +17,7 @@ export const baseSchemas: FormSchema[] = [{
 }, {
   type: "input",
   label: "Number of biological replicates",
-  name: "number_of_biological_replicates",
+  name: biological_replicates_number_name,
   required: true,
   isNumber: true,
   defaultValue: 3,

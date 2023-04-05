@@ -1,6 +1,6 @@
 import { NestedArrayInputFormSchema, NestedArraySchema } from "@/schema/FormSchema";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import Input from "./Input";
 import LabelWithHelp from "./LabelWithHelp";
