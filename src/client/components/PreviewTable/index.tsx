@@ -14,7 +14,7 @@ type PreviewTableCellInnerProps = {
 
 const Td = ({ children }: React.PropsWithChildren) => {
   return (
-    <td className="px-2 w-96">
+    <td className="px-2 w-96 align-top">
       {children}
     </td>
   );

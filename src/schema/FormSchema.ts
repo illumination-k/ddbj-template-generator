@@ -28,6 +28,7 @@ type InputNumberFormSchema = {
 };
 
 type InputStringFormSchema = {
+  placeholder?: string;
   isNumber?: false;
   pattern?: RegExp;
   defaultValue?: string;
