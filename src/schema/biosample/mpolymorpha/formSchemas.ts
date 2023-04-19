@@ -58,14 +58,15 @@ const basicSchemas: FormSchema[] = [{
   type: "select",
   options: [
     "Tak-1",
-    "RIF-M",
+    "Rit-1",
     "Tak-2",
-    "RIF-F",
+    "Rit-2",
     "Kit-2",
     "BC-3",
     "Cam-1",
     "Cam-2",
-    "Melborune Australia",
+    "Aus-M",
+    "Aus-F",
     "BoGa",
     "Progenies of",
     "Other",
@@ -104,7 +105,7 @@ const basicSchemas: FormSchema[] = [{
   help: "Materanl allele of ecotype. If none applies, select other and specify manually.",
   required: true,
   type: "select",
-  options: ["Tak-2", "Kit-2", "Other"],
+  options: ["Tak-2", "Rit-2", "BC3-38", "Kit-2", "Aus-F", "Other"],
   defaultValue: "Tak-2",
   dependDef: {
     depend: "ecotype",
@@ -135,7 +136,7 @@ const basicSchemas: FormSchema[] = [{
   help: "Pateranl allele of ecotype. If none applies, select other and specify manually.",
   required: true,
   type: "select",
-  options: ["Tak-1", "Other"],
+  options: ["Tak-1", "Rit-1", "Aus-M", "Other"],
   defaultValue: "Tak-1",
   dependDef: { depend: "ecotype", dependValue: "Progenies of", dependType: "eq" },
   transforms: [
@@ -250,8 +251,8 @@ const genotypeSchemas: FormSchema[] = [
   },
   {
     type: "text",
-    label: "Mutant construction protocol",
-    name: "mutant_construction_protocol",
+    label: "Mutant/Trasngenic construction protocol",
+    name: "mutatnt_transgenic_construction_protocol",
     required: false,
     comment: "Optional",
     dependDef: { depend: "genetic_modification", dependValue: "No modification (WT)", dependType: "nq" },
@@ -282,12 +283,12 @@ const materialAndMedhodSchemas: FormSchema[] = [
         name: "Sexual organ",
         content:
           "Plants were cultured on 1/2 Gamborg's B5 medium containing 1% sucrose and 1% agar under continuous white light condition at 22°C. "
-          + "To induce sexual reproduction, thalli developed from gemmae on 1/2 Gamborg's B5 medium were transferred to soil under continuous white light supplemented with far-red light irradiation",
+          + "To induce sexual reproduction, thalli developed from gemmae on 1/2 Gamborg's B5 medium were transferred to soil under continuous white light supplemented with far-red light irradiation.",
       },
       {
         name: "Regeneration",
         content:
-          "Apical and basal explants were excised from 10-day-old Tak-1 thalli and cultured on 1/2 Gamborg's B5 solid medium",
+          "Apical and basal explants were excised from 10-day-old Tak-1 thalli and cultured on 1/2 Gamborg's B5 solid medium.",
       },
       {
         name: "Abiotic stress (Heat shock)",
