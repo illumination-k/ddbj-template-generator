@@ -215,7 +215,7 @@ const BiosampleForm = ({}) => {
                         organism,
                         sub_species,
                         taxonomy_id,
-                        description: "generated_by: biosample_generator;",
+
                         ...fixedData,
                       },
                     );

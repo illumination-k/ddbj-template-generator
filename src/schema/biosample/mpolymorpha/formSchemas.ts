@@ -272,17 +272,17 @@ const materialAndMedhodSchemas: FormSchema[] = [
       {
         name: "Gemmaling",
         content:
-          "Plants were cultured on 1/2 Gamborg's B5 medium with 1% agar at 21-22°C under continuous white light condition during 5 days.",
+          "Plants were cultured on 1/2 Gamborg's B5 medium with 1% agar at 21-22 degrees Celsius under continuous white light condition during 5 days.",
       },
       {
         name: "Thallus",
         content:
-          "Plants were cultured on 1/2 Gamborg's B5 medium with 1% agar at 21-22°C under continuous white light condition during 14 days.",
+          "Plants were cultured on 1/2 Gamborg's B5 medium with 1% agar at 21-22 degrees Celsius under continuous white light condition during 14 days.",
       },
       {
         name: "Sexual organ",
         content:
-          "Plants were cultured on 1/2 Gamborg's B5 medium containing 1% sucrose and 1% agar under continuous white light condition at 22°C. "
+          "Plants were cultured on 1/2 Gamborg's B5 medium containing 1% sucrose and 1% agar under continuous white light condition at 22 degrees Celsius. "
           + "To induce sexual reproduction, thalli developed from gemmae on 1/2 Gamborg's B5 medium were transferred to soil under continuous white light supplemented with far-red light irradiation.",
       },
       {
@@ -293,7 +293,7 @@ const materialAndMedhodSchemas: FormSchema[] = [
       {
         name: "Abiotic stress (Heat shock)",
         content: "7-day-old gemmalings grown in liquid 1/2 B5 medium "
-          + "were treated at 37C for 0, 1, and 5 h with continuous white light.",
+          + "were treated at 37 degrees Celsius for 0, 1, and 5 h with continuous white light.",
       },
       {
         name: "Abiotic stress (Salt)",
