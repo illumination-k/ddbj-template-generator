@@ -26,5 +26,6 @@
     "editor.wordWrap": "on",
     "editor.defaultFormatter": "dprint.dprint",
     "editor.formatOnSave": true
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

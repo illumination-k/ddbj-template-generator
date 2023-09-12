@@ -41,10 +41,9 @@ const FieldFormBase = ({ formSchema }: FieldFormProps) => {
           <LabelWithHelp label={label} help={help} required={required} comment={comment}>
             <Input
               id={name}
-              type={isNumber ? "number" : undefined}
               placeholder={placeholder}
               defaultValue={defaultValue}
-              {...register(name, { required, valueAsNumber: isNumber, pattern })}
+              {...register(name, { required, pattern })}
             />
             <ErrorMessage formSchema={formSchema} />
           </LabelWithHelp>

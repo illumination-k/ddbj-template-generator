@@ -22,4 +22,13 @@ export const baseSchemas: FormSchema[] = [{
   isNumber: true,
   defaultValue: 3,
   min: 1,
+}, {
+  type: "input",
+  label: "Collection date",
+  name: "collection_date",
+  required: true,
+  help: "The date the sample was collected. Please specify at least the closest year in the ISO 8601 format",
+  pattern: /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i,
+  errorTemplate:
+    "ISO 8601 format: YYYY, YYYY-MM, YYYY-MM-DD, YYYY-MM-DDThh:mm:ss.sTZD, YYYY-MM-DDThh:mm:ssTZD, YYYY-MM-DDThh:mmTZD",
 }];
